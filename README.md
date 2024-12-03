@@ -97,14 +97,6 @@ Enter your choice:
 
 ---
 
-## Future Improvements
-- Add a database or file storage for persistent data.
-- Implement GUI for better user experience.
-- Enhance category management (e.g., add/delete categories).
-- Generate financial reports in PDF/Excel formats.
-
----
-
 ## Error Handling
 - Handles invalid inputs such as incorrect date formats or out-of-range indices.
 - Guides users with error messages for retrying.
