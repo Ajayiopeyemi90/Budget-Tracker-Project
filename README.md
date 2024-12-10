@@ -10,19 +10,25 @@ The Budget Tracker is a Java console application that helps users manage their f
 
 ## Features
 
-1. **Add Transactions**  
+1. **User Authentication:**
+
+   - Users can register with their email and password.
+   - Login is required to access the budget tracker functionalities.
+   - Email validation is performed using regex.
+
+2. **Add Transactions**  
    - Record financial transactions with details such as date, amount, description, type (Income or Expenses), category, and recurrence status.
 
-2. **Edit Transactions**  
+3. **Edit Transactions**  
    - Modify existing transactions to update their details.
 
-3. **View Financial Summary**  
+4. **View Financial Summary**  
    - Get an overview of total income, expenses, recurring expenses, and savings.
 
-4. **List Transactions**  
+5. **List Transactions**  
    - Display all recorded transactions in a tabular format.
 
-5. **Recurring Expense Tracking**  
+6. **Recurring Expense Tracking**  
    - Identify transactions marked as recurring expenses.
 
 ---
