@@ -111,6 +111,6 @@ Enter your choice:
 ##Author: 
 - Name: Ajayi Opeyemi Joseph
 - Email: ajayiopeyemi90@yahoo.com
-- Faceboo.com: facebook.com/Horpeyemi90
+- Facebook: https://www.facebook.com/Horpeyemi90
 - LinkedIn: https://www.linkedin.com/in/opeyemi-ajayi-117305124
 ---
