@@ -108,7 +108,7 @@ Enter your choice:
 - Handles invalid inputs such as incorrect date formats or out-of-range indices.
 - Guides users with error messages for retrying.
 
-##Author: 
+### Author: 
 - Name: Ajayi Opeyemi Joseph
 - Email: ajayiopeyemi90@yahoo.com
 - Facebook: https://www.facebook.com/Horpeyemi90
