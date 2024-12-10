@@ -1,18 +1,20 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 import java.time.format.DateTimeParseException;
 
-public class Transaction{
+public class Transaction {
     private LocalDate date;
     private double amount;
     private String description;
-    private String category; // grocery, tax, salary, bonus e.t.c
-    private String transactionType; //Either it's an Income or Expenses 
+    private String category;
+    private String transactionType;
     private boolean isRecurring;
-    
-    public Transaction(LocalDate date, double amount, String description, String transactionType, String category){
-        this.date = date; 
+
+    public Transaction(LocalDate date, double amount, String description, String transactionType, String category) {
+        this.date = date;
         this.amount = amount;
         this.description = description;
         this.transactionType = transactionType;
@@ -20,7 +22,7 @@ public class Transaction{
         this.isRecurring = false;
     }
     
-    //getter and setter for date 
+       //getter and setter for date 
     public LocalDate getDate(){
         return date;
     }
@@ -62,53 +64,53 @@ public class Transaction{
     public void setCategory(String category) { 
         this.category = category; }
         
-        //Getter and setter for RecurringCost
-     public boolean isRecurring() {
+          //Getter and setter for RecurringCost
+     public boolean getRecurring() {
         return isRecurring;
-    }
-
-    public void setRecurring(boolean isRecurring) {
+     }
+     
+     public void setRecurring(boolean isRecurring) {
         this.isRecurring = isRecurring;
-    }
-    
+     }
+     
     @Override
-    public String toString(){
-        return "Date: " + date + 
-        "\n Amount: " + amount + 
-        "\n Description: " + description + 
-        "\n Income or Expenses" + transactionType;
+    public String toString() {
+        return "Date: " + date +
+                "\nAmount: " + amount +
+                "\nDescription: " + description +
+                "\nType: " + transactionType +
+                "\nCategory: " + category +
+                "\nRecurring: " + (isRecurring ? "Yes" : "No");
     }
-    
+
     public static class Tracker {
-    private ArrayList<Transaction> transactions;
-    private double income;
-    private double expenses;
-    private double recurringCost; 
+        private ArrayList<Transaction> transactions;
+        private double income;
+        private double expenses;
+        private double recurringCost;
 
-    // Constructor
-    public Tracker() {
-        transactions = new ArrayList<>();
-        income = 0;
-        expenses = 0;
-        recurringCost = 0;
-    }
+        public Tracker() {
+            transactions = new ArrayList<>();
+            income = 0;
+            expenses = 0;
+            recurringCost = 0;
+        }
 
-    // Add a transaction
-    public void addTransaction(LocalDate date, double amount, String description, String transactionType, String category, boolean isRecurring) {
-        Transaction transaction = new Transaction(date, amount, description, transactionType, category);
-        transactions.add(transaction);
+        public void addTransaction(LocalDate date, double amount, String description, String transactionType, String category, boolean isRecurring) {
+            Transaction transaction = new Transaction(date, amount, description, transactionType, category);
+            transactions.add(transaction);
 
-        if (transactionType.equalsIgnoreCase("Income")) {
-            income += amount;
-        } else if (transactionType.equalsIgnoreCase("Expenses")) {
-            expenses += amount;
-            if (isRecurring) {
-                recurringCost += amount;
+            if (transactionType.equalsIgnoreCase("Income")) {
+                income += amount;
+            } else if (transactionType.equalsIgnoreCase("Expenses")) {
+                expenses += amount;
+                if (isRecurring) {
+                    recurringCost += amount;
+                }
             }
         }
-    }
-
-    // Edit a transaction
+        
+        // Edit a transaction
     public void editTransaction(int index, LocalDate newDate, double newAmount, String newDescription, String newTransactionType, String newCategory, boolean isRecurring) {
         if (index >= 0 && index < transactions.size()) {
             Transaction oldTransaction = transactions.get(index);
@@ -118,7 +120,7 @@ public class Transaction{
                 income -= oldTransaction.getAmount();
             } else if (oldTransaction.getTransactionType().equalsIgnoreCase("Expenses")) {
                 expenses -= oldTransaction.getAmount();
-                if (oldTransaction.isRecurring()) {
+                if (oldTransaction.getRecurring()) {
                     recurringCost -= oldTransaction.getAmount();
                 }
             }
@@ -145,50 +147,91 @@ public class Transaction{
         }
     }
 
-    // Display financial summary
-    public void displayTransaction() {
-        System.out.println("Your total income: " + income);
-        System.out.println("Your total expenses: " + expenses);
-        System.out.println("Your recurring expenses: " + recurringCost);
-        double totalSavings = income - expenses;
-        System.out.println("Total savings: " + totalSavings);
+        public void displayTransaction() {
+            System.out.println("Total Income: " + income);
+            System.out.println("Total Expenses: " + expenses);
+            System.out.println("Recurring Expenses: " + recurringCost);
+            System.out.println("Savings: " + (income - expenses));
+        }
 
-        if (income < expenses) {
-            System.out.println("You are on a negative budget. Deficit: " + totalSavings);
+        public void listTransaction() {
+            if (transactions.isEmpty()) {
+                System.out.println("No transactions to display.");
+                return;
+            }
+            System.out.printf("%-5s %-12s %-10s %-15s %-15s %-10s %-10s%n",
+                    "S/N", "Date", "Amount", "Description", "Category", "Type", "Recurring");
+            System.out.println("--------------------------------------------------------------------------");
+            int index = 1;
+            for (Transaction t : transactions) {
+                System.out.printf("%-5d %-12s %-10.2f %-15s %-15s %-10s %-10s%n",
+                        index++, t.date, t.amount, t.description, t.category, t.transactionType, t.isRecurring ? "Yes" : "No");
+            }
         }
     }
 
-    // List all transactions
-    public void listTransaction() {
-        if (transactions.isEmpty()) {
-        System.out.println("No transactions to display.");
-        return;
-    }
-    
-     // Print table header
-        System.out.printf("%-5s %-12s %-10s %-15s %-15s %-10s %-10s%n", 
-        "S/N", "Date", "Amount", "Description", "Category", "Type", "Recurring");
-         System.out.println("---------------------------------------------------------------------------------------------");
-        
-        // Print each transaction
-        int index = 1;
-        for (Transaction t : transactions) {
-            System.out.printf("%-5d %-12s %,-10.2f %-15s %-15s %-10s %-10s%n", 
-            index++,
-            t.getDate(),
-            t.getAmount(),
-            t.getDescription(),
-            t.getCategory(),
-            t.getTransactionType(),
-            t.isRecurring() ? "Yes" : "No");
-
-        }
-    }
-}
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
+        HashMap<String, String> users = new HashMap<>();
         Tracker tracker = new Tracker();
 
+        // Email and password regex for validation
+        String emailRegex = "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$";
+        Pattern emailPattern = Pattern.compile(emailRegex);
+        boolean loggedIn = false;
+
+        // User authentication
+        while (!loggedIn) {
+            System.out.println("\n--- Welcome to Budget Tracker ---");
+            System.out.println("1. Register");
+            System.out.println("2. Login");
+            System.out.print("Enter your choice: ");
+            int choice = input.nextInt();
+            input.nextLine(); // Consume newline character
+
+            if (choice == 1) {
+                System.out.print("Enter your first name: ");
+                String firstNname = input.nextLine();
+                
+                System.out.print("Enter your last name: ");
+                String lastName = input.nextLine();
+                
+                
+                System.out.print("Enter your email: ");
+                String email = input.nextLine();
+
+                // Validate email
+                if (!emailPattern.matcher(email).matches()) {
+                    System.out.println("Invalid email format. Please try again.");
+                    continue;
+                }
+
+                if (users.containsKey(email)) {
+                    System.out.println("Email already registered. Please log in.");
+                } else {
+                    System.out.print("Enter a password: ");
+                    String password = input.nextLine();
+                    users.put(email, password);
+                    System.out.println("Registration successful! You can now log in.");
+                }
+            } else if (choice == 2) {
+                System.out.print("Enter your email: ");
+                String email = input.nextLine();
+                System.out.print("Enter your password: ");
+                String password = input.nextLine();
+
+                if (users.containsKey(email) && users.get(email).equals(password)) {
+                    System.out.println("Login successful! Welcome, " + email + ".");
+                    loggedIn = true; // Set login flag to true
+                } else {
+                    System.out.println("Invalid email or password. Please try again.");
+                }
+            } else {
+                System.out.println("Invalid choice. Please try again.");
+            }
+        }
+
+        // Budget Tracker Menu
         while (true) {
             System.out.println("\n--- Budget Tracker Menu ---");
             System.out.println("1. Add Transaction");
@@ -262,15 +305,6 @@ public class Transaction{
                     System.out.print("Enter new date (yyyy-MM-dd): ");
                     LocalDate newDate = LocalDate.parse(input.nextLine());
                     
-                    // double newAmount;
-                    // do {System.out.print("Enter new amount: ");
-                    // newAmount = input.nextDouble();
-                    // input.nextLine();
-                    //     if (newAmount <= 0){
-                    //         System.out.println("Enter a valid amount");
-                    //     }
-                    // } while (newAmount <= 0); // Consume newline character
-                    
                      double newAmount;
                     do {System.out.print("Enter new amount: ");
                         newAmount = input.nextDouble();
@@ -306,16 +340,7 @@ public class Transaction{
                              System.out.println("Enter new category: ");
                          }
                     }while (newCategory.isEmpty());
-                    
-                    // System.out.print("Enter new description: ");
-                    // String newDescription = input.nextLine();
-
-                    // System.out.print("Enter new transaction type (Income/Expenses): ");
-                    // String newTransactionType = input.nextLine();
-
-                    // System.out.print("Enter new category: ");
-                    // String newCategory = input.nextLine();
-
+                   
                     System.out.print("Is this a recurring transaction? (true/false): ");
                     boolean isRecurring = input.nextBoolean();
 
